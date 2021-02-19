@@ -302,6 +302,8 @@ func (autoscaler *HorizontalRunnerAutoscalerGitHubWebhook) getScaleTarget(ctx co
 }
 
 func (autoscaler *HorizontalRunnerAutoscalerGitHubWebhook) getScaleUpTarget(ctx context.Context, repoNameFromWebhook, orgNameFromWebhook string, f func(v1alpha1.ScaleUpTrigger) bool) (*ScaleTarget, error) {
+	autoscaler.Log.Info("finding target to scale up", "repo", repoNameFromWebhook, "org", orgNameFromWebhook)
+
 	if target, err := autoscaler.getScaleTarget(ctx, repoNameFromWebhook, f); err != nil {
 		return nil, err
 	} else if target != nil {
