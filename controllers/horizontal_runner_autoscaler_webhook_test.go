@@ -9,6 +9,7 @@ import (
 	actionsv1alpha1 "github.com/summerwind/actions-runner-controller/api/v1alpha1"
 	"io"
 	"io/ioutil"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	"net/http"
@@ -41,8 +42,32 @@ func TestWebhookCheckRun(t *testing.T) {
 	testServer(t,
 		"check_run",
 		&e,
+		[]runtime.Object{
+			&actionsv1alpha1.RunnerDeployment{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "my-repository-runner",
+				},
+				Spec: actionsv1alpha1.RunnerDeploymentSpec{
+					Template: actionsv1alpha1.RunnerTemplate{
+						Spec: actionsv1alpha1.RunnerSpec{
+							Repository: "MYORG/MYREPO",
+						},
+					},
+				},
+			},
+			&actionsv1alpha1.HorizontalRunnerAutoscaler{
+				ObjectMeta: metav1.ObjectMeta{
+					Name: "my-repository-autoscaler",
+				},
+				Spec: actionsv1alpha1.HorizontalRunnerAutoscalerSpec{
+					ScaleTargetRef: actionsv1alpha1.ScaleTargetRef{
+						Name: "my-repository-runner",
+					},
+				},
+			},
+		},
 		200,
-		"no horizontalrunnerautoscaler to scale for this github event",
+		"scaled my-repository-runner by 1",
 	)
 }
 
@@ -63,6 +88,7 @@ func TestWebhookPullRequest(t *testing.T) {
 			},
 			Action: github.String("created"),
 		},
+		nil,
 		200,
 		"no horizontalrunnerautoscaler to scale for this github event",
 	)
@@ -77,6 +103,7 @@ func TestWebhookPush(t *testing.T) {
 				Organization: github.String("myorg"),
 			},
 		},
+		nil,
 		200,
 		"no horizontalrunnerautoscaler to scale for this github event",
 	)
@@ -88,6 +115,7 @@ func TestWebhookPing(t *testing.T) {
 		&github.PingEvent{
 			Zen: github.String("zen"),
 		},
+		nil,
 		200,
 		"pong",
 	)
@@ -106,12 +134,10 @@ func installTestLogger(webhook *HorizontalRunnerAutoscalerGitHubWebhook) *bytes.
 	return logs
 }
 
-func testServer(t *testing.T, eventType string, event interface{}, wantCode int, wantBody string) {
+func testServer(t *testing.T, eventType string, event interface{}, initObjs []runtime.Object, wantCode int, wantBody string) {
 	t.Helper()
 
 	hraWebhook := &HorizontalRunnerAutoscalerGitHubWebhook{}
-
-	var initObjs []runtime.Object
 
 	client := fake.NewFakeClientWithScheme(sc, initObjs...)
 

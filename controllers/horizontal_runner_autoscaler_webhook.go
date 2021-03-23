@@ -302,6 +302,8 @@ func (autoscaler *HorizontalRunnerAutoscalerGitHubWebhook) getScaleTarget(ctx co
 }
 
 func (autoscaler *HorizontalRunnerAutoscalerGitHubWebhook) getScaleUpTarget(ctx context.Context, repoNameFromWebhook, orgNameFromWebhook string, f func(v1alpha1.ScaleUpTrigger) bool) (*ScaleTarget, error) {
+	autoscaler.Log.Info("finding target to scale up", "repo", repoNameFromWebhook, "org", orgNameFromWebhook)
+
 	if target, err := autoscaler.getScaleTarget(ctx, repoNameFromWebhook, f); err != nil {
 		return nil, err
 	} else if target != nil {
@@ -351,9 +353,11 @@ func (autoscaler *HorizontalRunnerAutoscalerGitHubWebhook) tryScaleUp(ctx contex
 func (autoscaler *HorizontalRunnerAutoscalerGitHubWebhook) SetupWithManager(mgr ctrl.Manager) error {
 	name := "webhookbasedautoscaler"
 	autoscaler.Recorder = mgr.GetEventRecorderFor(name)
+	autoscaler.Log.Info("setup", "name", name)
 
 	if err := mgr.GetFieldIndexer().IndexField(&v1alpha1.HorizontalRunnerAutoscaler{}, scaleTargetKey, func(rawObj runtime.Object) []string {
 		hra := rawObj.(*v1alpha1.HorizontalRunnerAutoscaler)
+		autoscaler.Log.Info("indexing", "hra", hra)
 
 		if hra.Spec.ScaleTargetRef.Name == "" {
 			return nil
