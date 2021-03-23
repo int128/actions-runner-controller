@@ -1,4 +1,5 @@
 {
+  "extends": [],
   "regexManagers": [
     // runner version in https://github.com/actions/runner/releases
     {
