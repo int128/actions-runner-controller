@@ -29,7 +29,7 @@ image:
 kube_rbac_proxy:
   image:
     repository: quay.io/brancz/kube-rbac-proxy
-    tag: v0.8.0
+    tag: v0.9.0
 
 imagePullSecrets: []
 nameOverride: ""
