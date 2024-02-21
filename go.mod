@@ -14,7 +14,7 @@ require (
 	github.com/onsi/gomega v1.13.0
 	github.com/prometheus/client_golang v1.11.0
 	github.com/teambition/rrule-go v1.6.2
-	go.uber.org/zap v1.17.0
+	go.uber.org/zap v1.27.0
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	gomodules.xyz/jsonpatch/v2 v2.2.0
 	k8s.io/api v0.21.1
