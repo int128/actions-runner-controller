@@ -77,7 +77,7 @@ metrics:
     enabled: true
     image:
       repository: quay.io/brancz/kube-rbac-proxy
-      tag: v0.10.0
+      tag: v0.18.0
 
 resources:
   {}
