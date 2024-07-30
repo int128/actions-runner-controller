@@ -5,13 +5,13 @@ go 1.15
 require (
 	github.com/bradleyfalzon/ghinstallation v1.1.1
 	github.com/davecgh/go-spew v1.1.1
-	github.com/go-logr/logr v0.4.0
-	github.com/google/go-cmp v0.5.6
+	github.com/go-logr/logr v1.4.1
+	github.com/google/go-cmp v0.6.0
 	github.com/google/go-github/v37 v37.0.0
 	github.com/gorilla/mux v1.8.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/onsi/ginkgo v1.16.4
-	github.com/onsi/gomega v1.13.0
+	github.com/onsi/gomega v1.34.1
 	github.com/prometheus/client_golang v1.11.0
 	github.com/teambition/rrule-go v1.6.2
 	go.uber.org/zap v1.17.0
