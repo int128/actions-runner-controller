@@ -1,0 +1,15 @@
+name: build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+
+jobs:
+  build:
+    uses: int128/docker-build-workflow/.github/workflows/build.yaml@v1
+    with:
+      platforms: linux/amd64,linux/arm64
