@@ -13,3 +13,5 @@ jobs:
     uses: int128/docker-build-workflow/.github/workflows/build.yaml@v1
     with:
       platforms: linux/amd64,linux/arm64
+      build-args: |
+        VERSION=0.9.3      
